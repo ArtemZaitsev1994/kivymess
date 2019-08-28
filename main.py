@@ -10,10 +10,10 @@ def echo(request):
     return web.Response(text=json.dumps(request))
 
 app = web.Application()
-web.run_app(app, port=os.getenv('PORT', 8000))
 app.add_routes([
     web.get('/', echo)
 ])
+web.run_app(app, port=os.getenv('PORT'))
 
 if __name__ == '__main__':
     web.run_app(app)
