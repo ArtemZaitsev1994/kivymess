@@ -6,6 +6,7 @@ import os
 
 
 def echo(request):
+	print(1)
     return web.Response(text=json.dumps(request))
 
 app = web.Application()
