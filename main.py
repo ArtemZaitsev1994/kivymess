@@ -10,7 +10,7 @@ def echo(request):
     print(request.headers)
     print(dir(request.headers))
     print(dir(request))
-    print(request)
+    print(request.items())
     return web.Response(text=json.dumps({'hello':'world'}))
 
 app = web.Application()
