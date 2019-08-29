@@ -6,8 +6,12 @@ import os
 
 
 def echo(request):
-    print(1)
-    return web.Response(text=json.dumps(request))
+    print(request.headers.get('X-Real-IP'))
+    print(request.headers)
+    print(dir(request.headers))
+    print(dir(request))
+    print(request)
+    return web.Response(text=json.dumps({'hello':'world'}))
 
 app = web.Application()
 app.add_routes([
