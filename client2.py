@@ -96,7 +96,7 @@ class ChatWindow(Screen):
 
     def on_enter(self):
         
-        response = urllib.request.urlopen('https://kivymess.herokuapp.com')
+        response = urllib.request.urlopen('https://kivymess.herokuapp.com/messages')
         print(response.read())
         
 
