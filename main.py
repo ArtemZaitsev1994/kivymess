@@ -33,7 +33,7 @@ class DataBase:
     """
 
     def __enter__(self):
-        self.db = MySQLdb.connect(user='root',passwd='root',db='kivy')
+        self.db = MySQLdb.connect(user='b0efaf87785c65',passwd='df78bf26',db='eu-cdbr-west-02.cleardb.net')
         self.cur = self.db.cursor()
         return self
 
