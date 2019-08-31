@@ -56,7 +56,7 @@ class DataBase:
         self.db.close()
 
 
-    def get_messages(self, chat_name):
+    def get_messages(self):
         self.cur.execute(f'SELECT * FROM test_chat')
 
     def write_message(self, chat_name, message, sender):
