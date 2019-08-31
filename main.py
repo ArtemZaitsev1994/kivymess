@@ -54,7 +54,7 @@ class DataBase:
         	user='b0efaf87785c65',
         	passwd='df78bf26',
         	host='eu-cdbr-west-02.cleardb.net',
-        	db='kivy'
+        	db='heroku_dd313defe6a3ba0'
         )
         self.cur = self.db.cursor()
         return self
