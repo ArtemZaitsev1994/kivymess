@@ -1,6 +1,7 @@
 from aiohttp import web
 import json
 import MySQLdb
+import os
 
 async def all_news(request):
     print(2)
