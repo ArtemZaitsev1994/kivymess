@@ -32,11 +32,11 @@ async def second(request):
 
 
 app = web.Application()
-web.run_app(app, port=os.getenv('PORT', 8000))
 app.add_routes([
     web.get('/', all_news),
     web.get('/second', second)
 ])
+
 
 
 class DataBase:
@@ -90,4 +90,4 @@ class DataBase:
 
 if __name__ == '__main__':
     print(1)
-    web.run_app(app)
+    web.run_app(app, port=os.getenv('PORT', 8000))
