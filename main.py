@@ -16,10 +16,17 @@ async def websocket_handler(request):
 
     return ws
 
+async def get_messages(request):
+    with DataBase() as db:
+        data = db.get_messages()
+    print(data)
+    return web.Response(text=data)
+
 
 app = web.Application()
 app.add_routes([
-    web.get('/', websocket_handler)
+    web.get('/', websocket_handler),
+    web.get('/messages', get_messages)
 ])
 
 
@@ -50,10 +57,10 @@ class DataBase:
 
 
     def get_messages(self, chat_name):
-        self.cur.execute(f'SELECT * FROM {chat_name}_chat')
+        self.cur.execute(f'SELECT * FROM test_chat')
 
     def write_message(self, chat_name, message, sender):
-        self.cur.execute(f'INSERT {chat_name}_chat(contact, message) VALUES("{sender}", "{message}")')
+        self.cur.execute(f'INSERT test_chat(contact, message) VALUES("{sender}", "{message}")')
 
 
 if __name__ == '__main__':

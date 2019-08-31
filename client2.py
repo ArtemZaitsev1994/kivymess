@@ -1,5 +1,3 @@
-import aiohttp
-
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.label import Label
@@ -10,6 +8,8 @@ from kivy.uix.textinput import TextInput
 from kivy.lang import Builder 
 from kivy.config import ConfigParser
 from kivy.core.image import Image
+import socket
+import urllib.request
 
 
 Builder.load_string("""
@@ -65,37 +65,51 @@ class Messenger(Screen):
         MessengerApp.username = self.username
         change_screen('chat')
 
-async def ws():
-    async with aiohttp.ClientSession() as session:
-        return await session.ws_connect('https://kivymess.herokuapp.com/ws')
-
-async def get_mess(ws):
-    return await ws
-
 
 class ChatWindow(Screen):
+    s = socket.socket()
+    host = 'https://kivymess.herokuapp.com'
+    port = 443
     """docstring for Chat"""
     def __init__(self, **kw):
         super(ChatWindow, self).__init__(**kw)
+
+    def connect(self):
+        self.s.connect((self.host, self.port))
+        data = self.s.recv(4096).decode()
+        strdata = str(data)
+        print(strdata)
+
+    def send_message(self):
+        text = self.message
+        self.s.send(text)
+        self.message.text = ''
+        self.draw_mess({'text': text, 'sender':MessengerApp.username} )
+        self.receive_message()
+
+    def receive_message(self):
+        reply = self.s.recv(4096).decode()
+        strreply = str(reply)
+        print(strreply)
+        # self.draw_mess(s)
+
+
+    def on_enter(self):
         
-
-
-    async def on_enter(self):
-        self.ws = await ws()
-        for msg in get_mess(self.ws):
-            for m in msg.json():
-                self.draw_mess(m)
+        response = urllib.request.urlopen('https://kivymess.herokuapp.com')
+        print(response.read())
+        
 
     def draw_mess(self, message):
         m = f'{message["sender"]}:\n{message["text"]}'
         self.messages_area.data.append({'text': m, 'valign': 'top'})
 
-    def send_mess(self):
-        url = 'https://kivymess.herokuapp.com/send_mess'
-        text = self.message
-        self.draw_mess(text)
-        self.ws.send_json(data={'sender': MessengerApp.own_name, 'text': text})
-        self.message = ''
+    # def send_mess(self):
+    #     url = 'https://kivymess.herokuapp.com/send_mess'
+    #     text = self.message
+    #     self.draw_mess(text)
+    #     self.ws.send_json(data={'sender': MessengerApp.username, 'text': text})
+    #     self.message = ''
 # async with session.post(url, json={'sender': MessengerApp.own_name, 'text': text}) as resp:
 # code = await resp.status
 # if code == '200':
