@@ -35,7 +35,7 @@ app = web.Application()
 web.run_app(app, port=os.getenv('PORT', 8000))
 app.add_routes([
     web.get('/', all_news)
-    web.get('/', second)
+    web.get('/second', second)
 ])
 
 
