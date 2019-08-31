@@ -3,40 +3,24 @@ import json
 import MySQLdb
 import os
 
-async def all_news(request):
-    print(2)
-    result = request.transport.get_extra_info('peername')
-    with DataBase() as db:
-        print(3)
-        db.get_or_create_chat('test')
-        db.write_message('test', 'some message', 'artem')
-    print(4)
-    with DataBase() as db:
-        result = db.get_messages('test')
 
-    return web.Response(text=json.dumps(result))
+async def websocket_handler(request):
 
+    ws = web.WebSocketResponse()
+    await ws.prepare(request)
 
-async def second(request):
-    print(2)
-    result = request.transport.get_extra_info('peername')
     with DataBase() as db:
-        print(3)
-        db.get_or_create_chat('test')
-        db.write_message('test', 'some message', 'artem')
-    print(4)
-    with DataBase() as db:
-        result = db.get_messages('test')
+        async for msg in ws:
+            text = msg.data
+            print(text)
 
-    return web.Response(text=json.dumps(result))
+    return ws
 
 
 app = web.Application()
 app.add_routes([
-    web.get('/', all_news),
-    web.get('/second', second)
+    web.get('/', websocket_handler)
 ])
-
 
 
 class DataBase:
@@ -64,27 +48,6 @@ class DataBase:
         self.cur.close()
         self.db.close()
 
-    def add_chat(self, args):
-        self.cur.execute(f'INSERT chats(contact, chatname, type, ip) VALUES("{args[0]}", "{args[1]}", {args[2]}, "{args[3]}")')
-        # self.cur.execute(ADD_CHAT_QUERY % ', '.join(args))
-
-    def get_all_chats(self):
-        GET_ALL_CHATS_QUERY = 'SELECT * FROM chats'
-        self.cur.execute(GET_ALL_CHATS_QUERY)
-        return self.cur.fetchall()
-
-    def get_chat(self, name):
-        GET_CHAT_QUERY = f'SELECT * FROM chats WHERE chatname={name}'
-        self.cur.execute(GET_CHAT_QUERY)
-        return self.cur.fetchone()
-
-    def get_or_create_chat(self, chat_name):
-        CREATE_TABLE_QUERY = f"""
-            CREATE TABLE IF NOT EXISTS {chat_name}_chat 
-            (id INT PRIMARY KEY AUTO_INCREMENT, 
-            contact VARCHAR(30) NOT NULL,
-            message TEXT);"""
-        self.cur.execute(CREATE_TABLE_QUERY)
 
     def get_messages(self, chat_name):
         self.cur.execute(f'SELECT * FROM {chat_name}_chat')
@@ -94,5 +57,4 @@ class DataBase:
 
 
 if __name__ == '__main__':
-    print(1)
     web.run_app(app, port=os.getenv('PORT', 8000))
