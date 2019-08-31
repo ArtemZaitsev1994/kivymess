@@ -3,15 +3,15 @@ import json
 import MySQLdb
 
 async def all_news(request):
-    print(2)
-    result = request.transport.get_extra_info('peername')
-    with DataBase() as db:
-        print(3)
-        db.get_or_create_chat('test')
-        db.write_message('test', 'some message', 'artem')
-    print(4)
-    with DataBase() as db:
-        result = db.get_messages('test')
+    # print(2)
+    # result = request.transport.get_extra_info('peername')
+    # with DataBase() as db:
+    #     print(3)
+    #     db.get_or_create_chat('test')
+    #     db.write_message('test', 'some message', 'artem')
+    # print(4)
+    # with DataBase() as db:
+    #     result = db.get_messages('test')
 
     return web.Response(text=json.dumps(result))
 
